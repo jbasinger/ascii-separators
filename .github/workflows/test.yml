@@ -16,5 +16,6 @@ jobs:
 
       - name: Run tests
         run: |
-          ./test.sh > result.log
+          
+          ./docker-test.sh
           cat result.log >> $GITHUB_STEP_SUMMARY
