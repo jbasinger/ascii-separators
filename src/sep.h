@@ -2,17 +2,23 @@
 #ifndef _sep
 #define _sep
 
-#define FILE_SEP '\x1C'
+#define DB_SEP '\x1C'
 #define TBL_SEP '\x1D'
 #define ROW_SEP '\x1E'
 #define FLD_SEP '\x1F'
 
-#define INIT_CAP 1
+#define FILE_SEP '\x1C'
+#define GRP_SEP '\x1D'
+#define REC_SEP '\x1E'
+#define UNIT_SEP '\x1F'
+
+#define INIT_CAP 2
 
 typedef struct Field {
   int length;
   char* data;
 } Field;
+typedef Field Unit;
 
 typedef struct Row {
   int field_count;
@@ -20,6 +26,7 @@ typedef struct Row {
   int longest_field;
   Field* fields;
 } Row;
+typedef Row Record;
 
 typedef struct Table {
   int row_count;
@@ -28,23 +35,25 @@ typedef struct Table {
   Row* longest_row;
   Row* rows;
 } Table;
+typedef Table Group;
 
-typedef struct File {
+typedef struct Database {
   int table_count;
   int max_tables;
   char* name;
   Table* tables;
-} File;
+} Database;
+typedef Database File;
 
-// void save_file(File file, char* filepath);
-// File load_file(char* filepath);
-// void print_file(File file);
+void save_file(Database* db, char* filepath);
+// Database load_file(char* filepath);
+// char* print_file(Database db);
 
-File create_file(char* name);
+Database create_file(char* name);
 Table create_table(char* name);
 Row create_row();
 
-void add_table(File* file, Table table);
+void add_table(Database* db, Table table);
 void add_row(Table* table, Row row);
 void add_field(Row* row, char* data);
 

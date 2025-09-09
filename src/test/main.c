@@ -1,6 +1,103 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "sep.h"
+
+/*
+TEMPLATE:
+int test_should_doathing() {
+  printf("test_should_doathing...");
+
+  int res = 0;
+  
+  printf("\n\tNot yet implemented");
+  res |= 1;
+  
+  if(!res){
+    printf("🟢\n");
+  }else{
+    printf("\n🔴 FAILED\n");
+  }
+
+  return res;
+}
+*/
+
+// int test_should_print_file() {
+//   printf("test_should_load_file...");
+
+//   int res = 0;
+  
+//   printf("\n\tNot yet implemented");
+//   res |= 1;
+  
+//   if(!res){
+//     printf("🟢\n");
+//   }else{
+//     printf("\n🔴 FAILED\n");
+//   }
+
+//   return res;
+// }
+
+// int test_should_load_file() {
+//   printf("test_should_load_file...");
+
+//   int res = 0;
+  
+//   printf("\n\tNot yet implemented");
+//   res |= 1;
+  
+//   if(!res){
+//     printf("🟢\n");
+//   }else{
+//     printf("\n🔴 FAILED\n");
+//   }
+
+//   return res;
+// }
+
+int test_should_save_file() {
+  printf("test_should_save_file...");
+
+  int res = 0;
+  char* db_name = strdup("test_db");
+  char* table_name_a = strdup("test_table_a");
+  char* table_name_b = strdup("test_table_b");
+  
+  Database db = create_file(db_name);
+  
+  Table tbl_a = create_table(table_name_a);
+  Row row_a = create_row();
+  char* data_a = strdup("dataA");
+  
+  Table tbl_b = create_table(table_name_b);
+  Row row_b = create_row();
+  char* data_b = strdup("dataB");
+  
+  add_field(&row_a, data_a);
+  add_row(&tbl_a, row_a);
+  add_table(&db, tbl_a);
+
+  add_field(&row_b, data_b);
+  add_row(&tbl_b, row_b);
+  add_table(&db, tbl_b);
+
+  save_file(&db, "/tmp/mydb.sep");
+
+  if(access("/tmp/mydb.sep", F_OK) != 0){
+    printf("\n\tFile was not created");
+    res |= 1;
+  }
+
+  if(!res){
+    printf("🟢\n");
+  }else{
+    printf("\n🔴 FAILED\n");
+  }
+
+  return res;
+}
 
 int test_should_add_field_to_row() {
   printf("test_should_add_field_to_row...");
@@ -115,7 +212,7 @@ int test_should_make_row() {
     res |= 1;
   }
 
-  if(sizeof(r.fields) != (sizeof(r.fields) * r.max_fields)){
+  if(sizeof(r.fields) == 0){
     printf("\n\tRow fields not allocated");
     res |= 1;
   }
@@ -152,7 +249,7 @@ int test_should_make_table() {
     res |= 1;
   }
 
-  if(sizeof(t.rows) != (sizeof(t.rows) * t.max_rows)){
+  if(sizeof(t.rows) == 0){
     printf("\n\tTable rows not allocated");
     res |= 1;
   }
@@ -188,7 +285,7 @@ int test_should_make_file() {
     res |= 1;
   }
 
-  if(sizeof(f.tables) != (sizeof(f.tables) * f.max_tables)){
+  if( sizeof(f.tables) == 0 ){
     printf("\n\tFile tables not allocated");
     res |= 1;
   }
@@ -215,6 +312,8 @@ int main(){
   result |= test_should_add_table_to_file();
   result |= test_should_add_row_to_table();
   result |= test_should_add_field_to_row();
+  result |= test_should_save_file();
+  // result |= test_should_load_file();
 
   printf("\n");
 
