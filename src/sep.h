@@ -46,7 +46,7 @@ typedef struct Database {
 typedef Database File;
 
 void save_file(Database* db, char* filepath);
-// Database load_file(char* filepath);
+int load_file(Database* db, char* filepath);
 // char* print_file(Database db);
 
 Database create_file(char* name);
